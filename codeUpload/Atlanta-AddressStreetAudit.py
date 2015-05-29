@@ -22,15 +22,25 @@ OSMFILE = "atlanta.osm"
 street_type_re = re.compile(r'\b\S+\.?$', re.IGNORECASE)
 
 #UPDATE THIS DICTIONARY TO SPEED UP THE AUDITING PROCESS
-expected = ["Street", "Avenue", "Boulevard", "Drive", "Court", "Place", "Square", "Lane", "Road", 
-            "Trail", "Parkway", "Commons"]
+expected = ["Street", "Avenue", "Boulevard", "Drive", "Court",
+            "Place", "Square", "Lane", "Road","Trail", "Parkway"]
 
-# UPDATE THIS VARIABLE FOR  ALL REPLACEMENTS YOU WNAT TO MAKE
+# UPDATE THIS VARIABLE FOR  ALL REPLACEMENTS YOU WANT TO MAKE
 mapping = { 
             "St.": "Street",
             "Ave": "Avenue",
-            "Rd.":"Road"
-            }
+            "Blvd": "Boulevard",
+            "Dr": "Drive",
+            "Ct": "Court",
+            "Pl": "Place",
+            "Sq": "Square",
+            "Ln": "Lane",
+            "Rd": "Road",
+            "Trl": "Trail",
+            "Pkwy": "Parkway",
+            "Spr": "Spur",
+            "Cir": "Circle",
+          }
 
 
 def audit_street_type(street_types, street_name):
@@ -64,8 +74,8 @@ def update_name(name, mapping):
     return c
 
 
-#step 1: process the whole file to generate json file that contains all the street names(defaultdict(set))
-#that are not expected
+#step 1: process the whole file to generate json file that contains all
+#the street names(defaultdict(set)) that are not expected
 def process_map(file_in, pretty = False):
     file_out = "{0}.json".format(file_in)
     data = []
@@ -83,7 +93,8 @@ def process_map(file_in, pretty = False):
     return data
     
 
-#step 2: update the whole file with the mapping dictionary for the values of addr:street
+#step 2: update the whole file with the mapping dictionary for the 
+#values of addr:street
 def process(file_in, mapping):
     file_out = "{0}-streetname.xml".format(file_in)
     tree=etree.parse(file_in)
@@ -93,11 +104,11 @@ def process(file_in, mapping):
     tree.write(file_out)
     return None
 
-def test():
+def osmprocess():
     st_types = audit(OSMFILE)
     data = process_map(OSMFILE, False)
     pprint.pprint(dict(st_types))
     process(OSMFILE,mapping)
 
 if __name__ == '__main__':
-    test()
+    osmprocess()
